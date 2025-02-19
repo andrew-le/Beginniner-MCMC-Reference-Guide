@@ -377,7 +377,7 @@ ggplot(df, aes(x = value, fill = type, color = type)) +
 
 # Metropolis Hastings
 
-If you need to sample from a posterior distribution that does not follow a form that can be directly sampled from, you can use the Metropolis-Hastings algorithm.
+If you need to sample from a posterior distribution that does not follow a form that can be directly sampled from, you can use the Metropolis-Hastings (MH) algorithm.
 
 Notes:
 
