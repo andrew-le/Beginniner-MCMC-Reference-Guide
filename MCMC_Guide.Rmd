@@ -401,14 +401,13 @@ log_target <- function(theta) {
   return(dgamma(theta, shape = 3, rate = 1, log = TRUE))
 }
 
-theta <- rep(NA, 10000)
 
-num_sim <- 10000
+num_sim <- 1000
+theta_samps <- numeric(num_sim)
 
-theta[1] <- rgamma(1, shape = 3, rate = 1) #initialize theta
+theta_curr <- rgamma(1, shape = 3, rate = 1) #initialize theta
 
-for (t in 2:num_sim) {
-  theta_curr <- theta[t - 1]
+for (t in 1:num_sim) {
   v_star <- rnorm(1, mean = log(theta_curr), sd = 0.5)
   theta_prop <- exp(v_star)
   
@@ -420,23 +419,24 @@ for (t in 2:num_sim) {
                        - (log_A_denom + log_jacobian(theta_prop))))
   
   if (log_ratio >= log(runif(1))) {
-    theta[t] <- theta_prop
+    theta_samps[t] <- theta_prop
+    theta_curr <- theta_prop #update the theta_curr with the proposed value
   } else{
-    theta[t] <- theta_curr
+    theta_samps[t] <- theta_curr
   }
 }
 ```
 
 
 ```{r}
-plot(theta, type = "l")
+plot(theta_samps, type = "l")
 ```
 
 ```{r}
 gd = seq(0, 15, .1)
 purple.5 = scales::alpha("purple", .5)
 
-hist(theta, freq = FALSE, xlab = "", ylab = "", breaks = 100,
+hist(theta_samps, freq = FALSE, xlab = "", ylab = "", breaks = 100,
      border = purple.5, main = "Gamma(3, 1) Density")
 lines(gd, dgamma(gd, 3, 1), col = "grey50")
 ```
